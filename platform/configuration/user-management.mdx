@@ -1,45 +1,68 @@
 ---
 title: User management
-description: Invite, deactivate, and bulk-manage team members.
+description: Invite teammates, manage roles, and track pending invitations.
 ---
 
-Admins can manage the full member lifecycle from **Settings → Users**: invite new members, adjust roles, deactivate accounts, and bulk-import users via CSV.
-
-## Invite by email
-
-1. Go to **Settings → Users → Invite members**.
-2. Enter one or more email addresses, separated by commas.
-3. Select the workspace role to assign (Admin, Member, or Viewer).
-4. Click **Send invitations**.
-
-Invitees receive an email with a time-limited link. Links expire after 72 hours—resend from the pending invites list if needed.
+Workspace admins manage team membership from **Settings**. The Invitations card creates pending invites and generates a copyable accept link for each one, and the Members list shows everyone who has joined the workspace along with their name and email.
 
 <Info>
-  You can override the workspace-level role on a per-project basis after the member accepts their invitation.
+  Only workspace **admins** can view or use the Invitations card. Members with the editor, reviewer, or viewer role won't see it.
 </Info>
 
-## Deactivating accounts
+## Roles
 
-Deactivating a member revokes their access immediately without deleting their data. Any content they created remains intact and accessible to other members.
+When you invite someone, you pick the role they'll be granted once they accept:
 
-To deactivate a member:
+| Role | Typical use |
+| --- | --- |
+| **Admin** | Manage members, invitations, and workspace settings. |
+| **Editor** | Create and edit content across the workspace. |
+| **Reviewer** | Review and comment; limited editing. |
+| **Viewer** | Read-only access. |
 
-1. Find the member in **Settings → Users**.
-2. Open their profile and select **Deactivate account**.
-3. Confirm the action.
+The **Owner** role isn't assignable through invitations — every workspace has exactly one owner, and ownership moves via the separate transfer-ownership flow.
 
-Deactivated accounts can be reactivated at any time by an Admin. Reactivating restores the member's original role and project memberships.
+## Inviting a teammate
 
-## Bulk CSV import
+1. Go to **Settings** and find the **Invitations** card.
+2. Enter the invitee's email address.
+3. Choose a role from the dropdown (admin, editor, reviewer, or viewer).
+4. Click **Send invitation**.
 
-For larger teams, use CSV import to invite multiple members at once.
+The new invitation appears in the pending list below the form with the assigned role and an expiry label (for example, *Expires in 7 days*).
 
-**Required columns:** `email`, `role`
+<Info>
+  Maestro does not send invitation emails. You share the accept link with the invitee yourself — over email, chat, or any other channel.
+</Info>
 
-**Optional columns:** `first_name`, `last_name`
+## Sharing the accept link
 
-Download the CSV template from the Users page, fill it in, and upload. The system validates each row before sending invitations—rows with errors are skipped and listed in the import summary.
+Each pending invitation has a **Copy invite link** button. The link looks like:
 
-<Warning>
-  CSV import sends invitations immediately. Review the file carefully before uploading, especially role assignments.
-</Warning>
+```text
+https://your-workspace.example.com/invitations/<invitationId>
+```
+
+Send this URL to the invitee. When they open it, they'll be prompted to sign in (or create an account) with the email address the invitation was sent to. The backend checks that the signed-in user's verified email matches the invitation before it will accept — if someone else opens the link, they get a generic "not accessible" error and no membership is created.
+
+## Accepting or declining
+
+On the invitation page (`/invitations/<invitationId>`), the invitee sees:
+
+- **Accept invitation** — creates their membership at the invited role and drops them into the workspace.
+- **Decline** — closes out the invitation without joining.
+
+Once accepted, the invitee is redirected into the workspace and appears in the Members card immediately. A declined invitation is finalized and can't be reused; issue a new one if the person changes their mind.
+
+## Managing pending invitations
+
+From the Invitations card an admin can:
+
+- **Copy invite link** — regrab the accept URL to resend it.
+- **Cancel** — revoke a pending invitation. The link stops working immediately.
+
+Invitations expire automatically after their expiry window. Expired rows show *Expired* — cancel them to clear the list, then send a fresh invitation.
+
+## Members list
+
+The **Members** card in Settings lists everyone who has joined the workspace, showing each member's name and email alongside their role. If a user record is missing a name or email, Maestro falls back to the next best identifier so the row stays actionable for admins.
